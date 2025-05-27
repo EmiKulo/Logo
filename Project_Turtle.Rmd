@@ -1,0 +1,101 @@
+---
+title: "Project Logo"
+author: "Emily Kulowatz"
+date: "2025-05-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Turtle Project
+
+This website presents the project I was working on during the seminar "Introduction to programming and scientific computing". 
+
+## At first, I generated a coordinate system grid, in which the graphic should appear later.
+
+```{r turtle-plot, echo=TRUE}
+plot(0, 0, type = "n", xlim = c(-10, 10), ylim = c(-10, 10),
+     xlab = "X-Axis", ylab = "Y-Axis", main = "Turtle Pattern in the Coordinate System")
+
+# Add grid lines
+grid(nx = NULL, ny = NULL, col = "gray", lty = 2)
+
+# Draw X and Y axes
+abline(h = 0, v = 0, col = "black", lwd = 2)
+```
+
+
+## The next step was to create a function for the movement. 
+
+```{r turtle-function, echo=TRUE}
+move_turtle <- function(x, y, angle, distance) {
+  new_x <- x + distance * cos(angle * pi / 180)
+  new_y <- y + distance * sin(angle * pi / 180)
+  return(c(new_x, new_y))
+}
+```
+
+## The following code draws the lines. 
+
+The first part determines the starting point at 0. The loops define the pattern. "new_pos" calculates the new position and "lines" adds a blue line. 
+
+```{r turtle-drawing, echo=TRUE}
+
+plot(0, 0, type = "n", xlim = c(-10, 10), ylim = c(-10, 10),
+     xlab = "X-Axis", ylab = "Y-Axis", main = "Turtle Pattern in the Coordinate System")
+grid(nx = NULL, ny = NULL, col = "gray", lty = 2)
+abline(h = 0, v = 0, col = "black", lwd = 2)
+
+x <- 0
+y <- 0
+angle <- 0 
+
+for (i in 1:20) {
+  for (j in 1:180) {
+    new_pos <- move_turtle(x, y, angle, 0.05)
+    lines(c(x, new_pos[1]), c(y, new_pos[2]), col = "blue")
+    x <- new_pos[1]
+    y <- new_pos[2]
+    angle <- (angle + 2) %% 360
+  }
+  angle <- (angle + 18) %% 360
+}
+```
+
+The code above did succeed to show the route of the turtle. However, one can see only the final pattern, not the movement. This is because the turtle movement is too fast. That's why I adjusted the code with "sys.sleep". Also, "points" adds a red moving point.
+
+## The new code is now a moving point animation.
+
+```{r turtle-animation, echo=TRUE}
+plot(0, 0, type = "n", xlim = c(-5, 5), ylim = c(-5, 5),
+     xlab = "X-Axis", ylab = "Y-Axis", main = "Turtle Pattern Animation")
+grid(nx = NULL, ny = NULL, col = "gray", lty = 2)
+abline(h = 0, v = 0, col = "black", lwd = 2)
+
+move_turtle <- function(x, y, angle, distance) {
+  new_x <- x + distance * cos(angle * pi / 180)
+  new_y <- y + distance * sin(angle * pi / 180)
+  return(c(new_x, new_y))
+}
+
+x <- 0
+y <- 0
+angle <- 0
+
+for (i in 1:20) {
+  for (j in 1:180) {
+    new_pos <- move_turtle(x, y, angle, 0.05)
+    lines(c(x, new_pos[1]), c(y, new_pos[2]), col = "blue")
+    points(new_pos[1], new_pos[2], col = "red", pch = 16, cex = 0.5)
+    x <- new_pos[1]
+    y <- new_pos[2]
+    angle <- (angle + 2) %% 360
+    Sys.sleep(0.01)
+  }
+  angle <- (angle + 18) %% 360
+}
+```
+
+Note: Animation only works in R. 
